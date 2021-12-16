@@ -1,69 +1,111 @@
-import Head from 'next/head'
+import { useState } from "react";
+import Head from "next/head";
+import SearchTextField from "../components/SearchTextField";
+import BottomMenu from "../components/mobile/BottomMenu";
+import AddUrlDialog from "../components/AddUrlDialog";
+
+import URLCard from "../components/URLCard";
+import MainMenu from "../components/MainMenu";
+import DeleteAlertDialog from "../components/DeleteAlertDialog";
+import ItemCard from "../components/ItemCard";
+import ItemDetail from "../components/mobile/ItemDetail";
+import OptionDrawer from "../components/mobile/OptionDrawer";
+import MainLayout from "../components/layout/MainLayout";
+
+const items = [
+  {
+    id: 0,
+    name: "MacBook Pro 15-in 2017",
+    description:
+      "This is an primary laptop for the personal software development",
+    alias: "Primary MacBook 12345678910111212312412",
+    addedAt: 1637077110,
+    updatedAt: 1637077110,
+    purchasedAt: 1483974000,
+    value: 3100000,
+    currency: "KRW",
+    lifeSpan: 365 * 5,
+    tags: [
+      {
+        id: 0,
+        name: "Apple",
+      },
+      {
+        id: 1,
+        name: "Laptop",
+      },
+      {
+        id: 2,
+        name: "Valuable",
+      },
+      {
+        id: 4,
+        name: "Intel",
+      },
+    ],
+    isFavorite: false,
+    isArchived: true,
+  },
+  {
+    id: 1,
+    name: "MacBook Pro 13-in 2020",
+    description:
+      "This is an secondary laptop for the personal software development",
+    alias: "Secondary MacBook 12345678910111212312412",
+    addedAt: 1637077110,
+    updatedAt: 1637077110,
+    purchasedAt: 1583974000,
+    value: 3100000,
+    currency: "KRW",
+    lifeSpan: 365 * 6,
+    tags: [
+      {
+        id: 0,
+        name: "Apple",
+      },
+      {
+        id: 1,
+        name: "Laptop",
+      },
+      {
+        id: 2,
+        name: "Valuable",
+      },
+      {
+        id: 3,
+        name: "M1",
+      },
+    ],
+    isFavorite: true,
+    isArchived: false,
+  },
+];
 
 export default function Home() {
+  // const [isAddUrlDialogOpen, setAddUrlDialogOpen] = useState(false);
+  // const [isDeleteAlertDialogOpen, setDeleteAlertDialogOpen] = useState(false);
+  const [isOptionDrawerOpen, setIsOptionDrawerOpen] = useState(false);
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen py-2">
+    <div className="flex flex-col min-h-screen">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="p-3 font-mono text-lg bg-gray-100 rounded-md">
-            pages/index.js
-          </code>
-        </p>
-
-        <div className="flex flex-wrap items-center justify-around max-w-4xl mt-6 sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="p-6 mt-6 text-left border w-96 rounded-xl hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <main className="w-screen">
+        {/* <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center"> */}
+        <div className="flex flex-col gap-2 p-2">
+          {items.map((item) => (
+            <ItemCard key={item.id} item={item} />
+          ))}
         </div>
+
+        <br />
+        {/* <SearchTextField
+          onSearch={(query) => {
+            console.log(query);
+          }}
+        /> */}
       </main>
 
       <footer className="flex items-center justify-center w-full h-24 border-t">
@@ -73,10 +115,14 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <img src="/vercel.svg" alt="Vercel Logo" className="h-4 ml-2" />
         </a>
       </footer>
     </div>
-  )
+  );
 }
+
+Home.getLayout = function getLayout(page, props) {
+  return <MainLayout pageProps={props}>{page}</MainLayout>;
+};

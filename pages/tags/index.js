@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
 import EditTagDialog from "../../components/EditTagDialog";
 import SearchTextField from "../../components/SearchTextField";
-import TagItem from "../../components/TagItem";
+import TagListItem from "../../components/TagListItem";
 
 const _tags = [
   {
@@ -144,7 +144,7 @@ export default function Tags({}) {
   const tagElements = useMemo(
     () =>
       state.tags.map((tag) => (
-        <TagItem
+        <TagListItem
           key={tag.id}
           tag={tag}
           onClickEdit={() =>
@@ -158,7 +158,7 @@ export default function Tags({}) {
     <>
       <div className="p-2">
         <SearchTextField
-          className="sticky top-1 z-10 bg-slate-100"
+          className="sticky top-1 z-10 search-text-field-default"
           placeholder="Search your items"
           onSearch={(keyword) => {
             console.log(keyword);

@@ -42,7 +42,6 @@ export default function BottomMenu({
 
   useEffect(() => {
     setItemId(menuItemId);
-    // onChangeMenuItem(menuItemId);
   }, [menuItemId, onChangeMenuItem]);
 
   return (

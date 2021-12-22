@@ -173,7 +173,7 @@ export default function ItemCard({
 
   return (
     <div
-      className="relative flex flex-col justify-between p-4 border rounded-md"
+      className="relative flex flex-col justify-between p-4 border rounded-md bg-white"
       onClick={_onClick}
     >
       <section className="mb-1 flex flex-col content-start">

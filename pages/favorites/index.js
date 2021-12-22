@@ -217,7 +217,7 @@ export default function Favorites() {
     <>
       <div className="flex flex-col gap-2 p-2">
         <SearchTextField
-          className="sticky top-1 z-10 bg-slate-100"
+          className="sticky top-1 z-10 search-text-field-default"
           placeholder="Search your items"
           onSearch={(keyword) => {
             console.log(keyword);

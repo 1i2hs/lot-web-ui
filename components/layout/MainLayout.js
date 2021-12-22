@@ -1,13 +1,17 @@
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 import BottomMenu from "../mobile/BottomMenu";
 import ToolBar from "../mobile/ToolBar";
 import AddItemDialog from "../AddItemDialog";
+import AddTagDialog from "../AddTagDialog";
 
 export default function MainLayout({ children }) {
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
-  const [isSearchTextFieldOpen, setIsSearchTextFieldOpen] = useState(false);
+  const [isAddTagDialogOpen, setIsAddTagDialogOpen] = useState(false);
+  const [isFilterControlOpen, setIsFilterControlOpen] = useState(false);
   const router = useRouter();
+  const { t } = useTranslation();
 
   const menuId = router.pathname.slice(1);
 
@@ -16,58 +20,60 @@ export default function MainLayout({ children }) {
       home: [
         {
           id: 0,
-          name: "Filter",
+          name: t("filter"),
           onClick: () => {
-            setIsSearchTextFieldOpen(true);
+            setIsFilterControlOpen(true);
           },
         },
         {
           id: 1,
-          name: "Add",
+          name: t("add"),
           onClick: () => setIsAddItemDialogOpen(true),
         },
       ],
       favorites: [
         {
           id: 0,
-          name: "Filter",
+          name: t("filter"),
           onClick: () => {
-            setIsSearchTextFieldOpen(true);
+            setIsFilterControlOpen(true);
           },
         },
       ],
       tags: [
         {
           id: 0,
-          name: "Add",
-          onClick: () => setIsAddItemDialogOpen(true),
+          name: t("add"),
+          onClick: () => setIsAddTagDialogOpen(true),
         },
       ],
     };
     return menuMap[menuId] ?? [];
-  }, [menuId]);
+  }, [menuId, t]);
 
   const onChangeMenuItem = useCallback(({ id, value }) => {
     router.push(`/${id}`);
   }, []);
 
   const onChangeDrawerState = useCallback((isOpen) => {
-    setIsSearchTextFieldOpen(isOpen);
+    setIsFilterControlOpen(isOpen);
   }, []);
 
   return (
-    <div className="relative grid grid-rows-[64px_1fr_80px] h-screen">
+    <div className="relative flex flex-col h-screen">
       <ToolBar
-        className="bg-white border-b"
+        className="absolute inset-x-0 top-0 z-10 h-16 bg-white bg-opacity-50 backdrop-blur-md border-b"
         title={menuId.toUpperCase()}
         menus={menus}
         drawerComponent={<div>HEAD</div>}
-        isDrawerOpen={isSearchTextFieldOpen}
+        isDrawerOpen={isFilterControlOpen}
         onChangeDrawerState={onChangeDrawerState}
       />
-      <main className="grow overflow-y-scroll">{children}</main>
+      <main className={`h-screen overflow-y-scroll pt-16 pb-20`}>
+        {children}
+      </main>
       <BottomMenu
-        className="flex-none h-20 bg-white border-t"
+        className="absolute inset-x-0 bottom-0 z-10 h-20 bg-white bg-opacity-50 backdrop-blur-md border-t"
         menuItemId={menuId}
         onChangeMenuItem={onChangeMenuItem}
       />
@@ -78,6 +84,15 @@ export default function MainLayout({ children }) {
         }}
         onAdd={(item) => {
           console.log(item);
+        }}
+      />
+      <AddTagDialog
+        isOpen={isAddTagDialogOpen}
+        onClose={() => {
+          setIsAddTagDialogOpen(false);
+        }}
+        onAdd={(tag) => {
+          console.log(tag);
         }}
       />
     </div>

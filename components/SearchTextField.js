@@ -44,24 +44,14 @@ export default function SearchTextField({
     onSearch(searchTextRef.current);
   }, []);
 
-  const backgroundColor = useMemo(() => {
-    const classNames = className.split(" ");
-    for (const singleClassName of classNames) {
-      if (singleClassName.startsWith("bg-")) {
-        return singleClassName;
-      }
-    }
-    return "bg-white";
-  }, [className]);
-
   return (
     <div
-      className={`flex flex-row p-2 border rounded-md w-full max-w-screen-sm space-x-2 ${
+      className={`flex flex-row p-2 border rounded-md w-full space-x-2 ${
         isFocused && "border-blue-500"
       } ${className}`}
     >
       <input
-        className={`flex-1 px-2 focus:outline-none ${backgroundColor}`}
+        className={`flex-1 px-2 focus:outline-none bg-transparent`}
         title="Search"
         name="q"
         ref={inputDOMRef}

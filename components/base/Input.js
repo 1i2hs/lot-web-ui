@@ -18,6 +18,7 @@ export function BaseInput({
   className = "",
   htmlId,
   label,
+  noLabel = false,
   isFocused = false,
   isInvalid = false,
   errorMessage,
@@ -26,7 +27,7 @@ export function BaseInput({
   const borderColor = getBorderColor(isFocused, isInvalid);
   return (
     <section>
-      <label htmlFor={htmlId}>{label}</label>
+      {!noLabel && <label htmlFor={htmlId}>{label}</label>}
       <div
         className={`flex flex-row py-1 px-2 border rounded ${borderColor} ${className}`}
       >
@@ -43,6 +44,7 @@ BaseInput.propTypes = {
   className: PropTypes.string,
   htmlId: PropTypes.string,
   label: PropTypes.string,
+  noLabel: PropTypes.bool,
   isFocused: PropTypes.bool,
   isInvalid: PropTypes.bool,
   errorMessage: PropTypes.string,
@@ -51,6 +53,7 @@ BaseInput.propTypes = {
 export function TextInput({
   htmlId,
   label,
+  noLabel = false,
   value,
   placeholder = "",
   onChange,
@@ -85,6 +88,7 @@ export function TextInput({
     <BaseInput
       htmlId={htmlId}
       label={label}
+      noLabel={noLabel}
       isFocused={isFocused}
       isInvalid={isInvalid}
       errorMessage={errorMessage}
@@ -115,6 +119,7 @@ export function TextInput({
 TextInput.propTypes = {
   htmlId: PropTypes.string,
   label: PropTypes.string,
+  noLabel: PropTypes.bool,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
@@ -197,6 +202,83 @@ DateInput.propTypes = {
   htmlId: PropTypes.string,
   label: PropTypes.string,
   value: PropTypes.string,
+  placeholder: PropTypes.string,
+  onChange: PropTypes.func,
+  isInvalid: PropTypes.bool,
+  errorMessage: PropTypes.string,
+};
+
+export function PasswordInput({
+  htmlId,
+  label,
+  noLabel = false,
+  value,
+  placeholder = "",
+  onChange,
+  isInvalid,
+  errorMessage,
+}) {
+  const inputDOMRef = useRef(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const _onChange = useCallback(
+    (event) => {
+      const value = event.target.value;
+      onChange(value);
+    },
+    [onChange]
+  );
+
+  const onFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const onBlur = useCallback(() => {
+    setIsFocused(false);
+  }, []);
+
+  const onClickClear = useCallback(() => {
+    inputDOMRef.current.value = "";
+    onChange("");
+  }, [onChange]);
+
+  return (
+    <BaseInput
+      htmlId={htmlId}
+      label={label}
+      noLabel={noLabel}
+      isFocused={isFocused}
+      isInvalid={isInvalid}
+      errorMessage={errorMessage}
+    >
+      <input
+        id={htmlId}
+        className="flex-grow px-2 focus:outline-none"
+        type="password"
+        placeholder={placeholder}
+        ref={inputDOMRef}
+        defaultValue={value}
+        onChange={_onChange}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      ></input>
+      <button
+        className="btn-default-md"
+        onClick={onClickClear}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      >
+        clear
+      </button>
+    </BaseInput>
+  );
+}
+
+PasswordInput.propTypes = {
+  htmlId: PropTypes.string,
+  label: PropTypes.string,
+  noLabel: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
   isInvalid: PropTypes.bool,

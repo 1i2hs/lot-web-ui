@@ -3,6 +3,12 @@ import PropTypes from "prop-types";
 import { BaseInput } from "./base/Input";
 import currencies from "../config/currencies";
 
+const currencyOptionElements = currencies.map(({ code }) => (
+  <option key={code} value={code}>
+    {code}
+  </option>
+));
+
 export default function ValueInput({
   htmlId,
   label,
@@ -30,16 +36,6 @@ export default function ValueInput({
     }
     return 0;
   }, [value]);
-
-  const currencyOptionElements = useMemo(
-    () =>
-      currencies.map(({ code }) => (
-        <option key={code} value={code}>
-          {code}
-        </option>
-      )),
-    []
-  );
 
   const onChangeCurrencyCode = useCallback((event) => {
     valueRef.current.currencyCode = event.target.value;

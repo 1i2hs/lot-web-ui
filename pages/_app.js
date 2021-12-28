@@ -9,7 +9,6 @@ dayjs.extend(relativeTime);
 
 function MyApp({ Component, pageProps }) {
   useEffect(() => {
-    console.log("HI");
     // Load preferred language & currency info from local storage
   });
   if (Component.getLayout) {

@@ -1,8 +1,18 @@
 import { useEffect, useState, useMemo, useCallback, Fragment } from "react";
 import PropTypes from "prop-types";
+import { motion, AnimatePresence } from "framer-motion";
 import { Transition } from "@headlessui/react";
 import OptionDrawer from "./OptionDrawer";
-import { Cross } from "../Icon";
+
+const titleVariants = {
+  visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+  hidden: { opacity: 0, x: -50 },
+};
+
+const menuVariants = {
+  visible: { opacity: 1, transition: { duration: 0.3 } },
+  hidden: { opacity: 0 },
+};
 
 const defaultFn = () => {};
 
@@ -92,8 +102,20 @@ export default function ToolBar({
         </Transition>
       )}
       <div className="relative h-16 p-4 flex justify-between gap-4 items-center">
-        <div className="text-2xl font-bold">{title}</div>
-        <div className="flex justify-end gap-2 items-center text-sm">
+        <motion.div
+          className="text-2xl font-bold"
+          variants={titleVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          {title}
+        </motion.div>
+        <motion.div
+          className="flex justify-end gap-2 items-center text-sm"
+          variants={menuVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {mainMenus.map((menu) => (
             <button
               key={menu.id}
@@ -115,7 +137,7 @@ export default function ToolBar({
               />
             </>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

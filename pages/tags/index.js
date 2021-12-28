@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
+import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import AddTagDialog from "../../components/AddTagDialog";
 import EditTagDialog from "../../components/EditTagDialog";
 import SearchTextField from "../../components/SearchTextField";
 import TagListItem from "../../components/TagListItem";
@@ -121,7 +124,7 @@ function reducer(state, action) {
 
 export default function Tags({}) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  console.log(state);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchTags() {
@@ -154,6 +157,11 @@ export default function Tags({}) {
       )),
     [state.tags]
   );
+
+  const { addTag } = router.query;
+
+  const isAddTagDialogOpen = addTag !== undefined && addTag !== false;
+
   return (
     <>
       <div className="p-2">
@@ -168,12 +176,32 @@ export default function Tags({}) {
           {tagElements}
         </div>
       </div>
+
       <EditTagDialog
         isOpen={state.isEditTagDialogOpen}
         tag={state.targetTag}
         onSave={onSaveEdit}
         onClose={onCloseEditDialog}
       />
+
+      <AddTagDialog
+        isOpen={isAddTagDialogOpen}
+        onClose={() => {
+          router.push("", undefined, { shallow: true });
+        }}
+        onAdd={(tag) => {
+          console.log(tag);
+        }}
+      />
     </>
   );
+}
+
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale)),
+      // Will be passed to the page component as props
+    },
+  };
 }

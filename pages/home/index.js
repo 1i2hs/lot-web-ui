@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from "next/router";
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import SearchTextField from "../../components/SearchTextField";
 import ItemCard from "../../components/ItemCard";
 import ItemDetail from "../../components/mobile/ItemDetail";
-import { TextInput } from "../../components/base/Input";
+import AddItemDialog from "../../components/AddItemDialog";
+import Progress from "../../components/Progress";
 
 const items = [
   {
@@ -246,9 +248,20 @@ const items = [
   },
 ];
 
+const ACTION_TYPE = {
+  SET_ITEMS: "SET_ITEMS",
+  FETCH_ITEMS: "FETCH_ITEMS",
+  OPEN_ITEM_DETAIL: "OPEN_ITEM_DETAIL",
+};
+
 export default function Home() {
-  const [isDeleteAlertDialogOpen, setIsDeleteAlertDialogOpen] = useState(false);
-  const [isOptionDrawerOpen, setIsOptionDrawerOpen] = useState(false);
+  // const [items, setItems] = useState([]);
+
+  const router = useRouter();
+
+  const { addItem, itemId } = router.query;
+
+  const isAddItemDialogOpen = addItem !== undefined && addItem !== false;
 
   return (
     <>
@@ -265,17 +278,28 @@ export default function Home() {
         ))}
       </div>
 
+      {/* <Progress message="Loading..." isVisible={true} /> */}
+
       {/* <ItemDetail
         item={items[0]}
         isOpen={true}
         onClose={() => console.log("2")}
       /> */}
+
+      <AddItemDialog
+        isOpen={isAddItemDialogOpen}
+        onClose={() => {
+          router.push("", undefined, { shallow: true });
+        }}
+        onAdd={(item) => {
+          console.log(item);
+        }}
+      />
     </>
   );
 }
 
 export async function getStaticProps({ locale }) {
-  console.log(locale);
   return {
     props: {
       ...(await serverSideTranslations(locale)),

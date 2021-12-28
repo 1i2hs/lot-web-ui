@@ -3,11 +3,8 @@ import { useRouter } from "next/router";
 import { useTranslation } from "next-i18next";
 import BottomMenu from "../mobile/BottomMenu";
 import ToolBar from "../mobile/ToolBar";
-import AddItemDialog from "../AddItemDialog";
-import AddTagDialog from "../AddTagDialog";
 
 export default function MainLayout({ children }) {
-  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isAddTagDialogOpen, setIsAddTagDialogOpen] = useState(false);
   const [isFilterControlOpen, setIsFilterControlOpen] = useState(false);
   const router = useRouter();
@@ -22,13 +19,15 @@ export default function MainLayout({ children }) {
           id: 0,
           name: t("filter"),
           onClick: () => {
-            setIsFilterControlOpen(true);
+            // setIsFilterControlOpen(true);
           },
         },
         {
           id: 1,
           name: t("add"),
-          onClick: () => setIsAddItemDialogOpen(true),
+          onClick: () => {
+            router.push("?addItem=true", undefined, { shallow: true });
+          },
         },
       ],
       favorites: [
@@ -44,7 +43,9 @@ export default function MainLayout({ children }) {
         {
           id: 0,
           name: t("add"),
-          onClick: () => setIsAddTagDialogOpen(true),
+          onClick: () => {
+            router.push("?addTag=true", undefined, { shallow: true });
+          },
         },
       ],
     };
@@ -72,29 +73,13 @@ export default function MainLayout({ children }) {
       <main className={`h-screen overflow-y-scroll pt-16 pb-20`}>
         {children}
       </main>
+
       <BottomMenu
         className="absolute inset-x-0 bottom-0 z-10 h-20 bg-white bg-opacity-50 backdrop-blur-md border-t"
         menuItemId={menuId}
         onChangeMenuItem={onChangeMenuItem}
       />
-      <AddItemDialog
-        isOpen={isAddItemDialogOpen}
-        onClose={() => {
-          setIsAddItemDialogOpen(false);
-        }}
-        onAdd={(item) => {
-          console.log(item);
-        }}
-      />
-      <AddTagDialog
-        isOpen={isAddTagDialogOpen}
-        onClose={() => {
-          setIsAddTagDialogOpen(false);
-        }}
-        onAdd={(tag) => {
-          console.log(tag);
-        }}
-      />
+      
     </div>
   );
 }

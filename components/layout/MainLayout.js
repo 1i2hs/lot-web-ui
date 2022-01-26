@@ -61,25 +61,22 @@ export default function MainLayout({ children }) {
   }, []);
 
   return (
-    <div className="relative flex flex-col h-screen">
+    <>
       <ToolBar
-        className="absolute inset-x-0 top-0 z-10 h-16 bg-white bg-opacity-50 backdrop-blur-md border-b"
+        className="fixed inset-x-0 top-0 z-10 h-16 bg-white bg-opacity-50 backdrop-blur-md border-b"
         title={menuId.toUpperCase()}
         menus={menus}
         drawerComponent={<div>HEAD</div>}
         isDrawerOpen={isFilterControlOpen}
         onChangeDrawerState={onChangeDrawerState}
       />
-      <main className={`h-screen overflow-y-scroll pt-16 pb-20`}>
-        {children}
-      </main>
+      <main className={`min-h-full pt-16 pb-20`}>{children}</main>
 
       <BottomMenu
-        className="absolute inset-x-0 bottom-0 z-10 h-20 bg-white bg-opacity-50 backdrop-blur-md border-t"
+        className="fixed inset-x-0 bottom-0 z-10 h-[72px] bg-white bg-opacity-50 backdrop-blur-md border-t"
         menuItemId={menuId}
         onChangeMenuItem={onChangeMenuItem}
       />
-      
-    </div>
+    </>
   );
 }

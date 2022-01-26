@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import MainLayout from "../../components/layout/MainLayout";
 import CurrencySelectDialog from "../../components/CurrencySelectDialog";
 import LanguageSelectDialog from "../../components/LanguageSelectDialog";
 
@@ -48,8 +49,8 @@ function reducer(state, action) {
 }
 
 const containerVariants = {
-  visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-  hidden: { opacity: 0, x: 100 },
+  visible: { opacity: 1, transition: { duration: 0.3 } },
+  hidden: { opacity: 0 },
 };
 
 export default function Settings({}) {
@@ -85,6 +86,7 @@ export default function Settings({}) {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
+          exit="hidden"
         >
           <section>
             <label className="block text-xl font-semibold border-b py-2">
@@ -146,3 +148,7 @@ export default function Settings({}) {
     </>
   );
 }
+
+Settings.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};

@@ -1,7 +1,17 @@
 import { useState, useCallback, useEffect, useReducer } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  getAuth,
+  connectAuthEmulator,
+  onAuthStateChanged,
+  signInWithCredential,
+  GoogleAuthProvider,
+} from "firebase/auth";
 import { PasswordInput, TextInput } from "../../components/base/Input";
 import Progress from "../../components/Progress";
+
+// const auth = getAuth();
+// connectAuthEmulator(auth, "http://localhost:9099");
 
 const EMPTY_ID_PASSWORD = "ID or password cannot be empty";
 const INVALID_ID_PASSWORD = "ID or password is invalid";
@@ -11,6 +21,23 @@ function validateIdAndPassword(id, pw) {
     return EMPTY_ID_PASSWORD;
   }
   return null;
+}
+
+function isUserEqual(googleCredential, firebaseUser) {
+  if (firebaseUser) {
+    const providerData = firebaseUser.providerData;
+    const id = googleCredential.sub;
+    for (let i = 0; i < providerData.length; i++) {
+      if (
+        providerData[i].providerId === GoogleAuthProvider.PROVIDER_ID &&
+        providerData[i].uid === id
+      ) {
+        // We don't need to reauth the Firebase connection.
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 const sectionVariants = {
@@ -80,6 +107,59 @@ export default function SignIn({}) {
   // const [errorMessage, setErrorMessage] = useState("error message");
   // const [isSigningIn, setIsSigningIn] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // useEffect(() => {
+  //   async function onSuccessGoogleSignIn(response) {
+  //     const googleCredential = response.credential;
+
+  //     const temp = atob(googleCredential.split(".")[1]);
+  //     const decodedCredential = JSON.parse(temp);
+
+  //     console.log(decodedCredential);
+
+  //     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+  //       unsubscribe();
+  //       // Check if we are already signed-in Firebase with the correct user.
+  //       if (!isUserEqual(decodedCredential, firebaseUser)) {
+  //         // Build Firebase credential with the Google ID token.
+  //         const credential = GoogleAuthProvider.credential(googleCredential);
+
+  //         // Sign in with credential from the Google user.
+  //         const firebaseCredentials = await signInWithCredential(
+  //           auth,
+  //           credential
+  //         ).catch((error) => {
+  //           // Handle Errors here.
+  //           const errorCode = error.code;
+  //           const errorMessage = error.message;
+  //           // The email of the user's account used.
+  //           const email = error.email;
+  //           // The credential that was used.
+  //           const credential = GoogleAuthProvider.credentialFromError(error);
+  //         });
+
+  //         console.log(firebaseCredentials.user);
+
+  //         // TODO: redirect
+  //       } else {
+  //         console.log("User already signed-in Firebase.");
+  //       }
+  //     });
+  //   }
+
+  //   const google = window.google;
+  //   google.accounts.id.initialize({
+  //     client_id:
+  //       "62913299994-1d33hb4plle1irlfos57rjeabi0uf2d2.apps.googleusercontent.com",
+  //     callback: onSuccessGoogleSignIn,
+  //   });
+
+  //   google.accounts.id.renderButton(
+  //     document.getElementById("google-signin-button-container"),
+  //     { theme: "outline", size: "large" }
+  //   );
+  //   google.accounts.id.prompt();
+  // }, []);
 
   const onChangeId = useCallback(
     (text) => {
@@ -158,6 +238,9 @@ export default function SignIn({}) {
               Sign In
             </button>
           </motion.div>
+          {/* <motion.div variants={itemVariants}>
+            <div id="google-signin-button-container"></div>
+          </motion.div> */}
         </motion.section>
       </AnimatePresence>
       <Progress message="Signing In..." dialog isVisible={state.isSigningIn} />

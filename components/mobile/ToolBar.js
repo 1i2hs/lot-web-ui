@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, useCallback, Fragment } from "react";
 import PropTypes from "prop-types";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Transition } from "@headlessui/react";
 import OptionDrawer from "./OptionDrawer";
 

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useReducer } from "react";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import MainLayout from "../../components/layout/MainLayout";
 import AddTagDialog from "../../components/AddTagDialog";
 import EditTagDialog from "../../components/EditTagDialog";
 import SearchTextField from "../../components/SearchTextField";
@@ -166,7 +167,7 @@ export default function Tags({}) {
     <>
       <div className="p-2">
         <SearchTextField
-          className="sticky top-1 z-10 search-text-field-default"
+          className="sticky top-[4.5rem] z-10 search-text-field-default"
           placeholder="Search your items"
           onSearch={(keyword) => {
             console.log(keyword);
@@ -196,6 +197,10 @@ export default function Tags({}) {
     </>
   );
 }
+
+Tags.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
 
 export async function getStaticProps({ locale }) {
   return {

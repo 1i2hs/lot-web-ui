@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import MainLayout from "../../components/layout/MainLayout";
 import SearchTextField from "../../components/SearchTextField";
 import ItemCard from "../../components/ItemCard";
 import ItemDetail from "../../components/mobile/ItemDetail";
@@ -267,7 +268,7 @@ export default function Home() {
     <>
       <div className="flex flex-col gap-2 p-2">
         <SearchTextField
-          className="sticky top-1 z-10 search-text-field-default"
+          className="sticky top-[4.5rem] z-10 search-text-field-default"
           placeholder="Search your items"
           onSearch={(keyword) => {
             console.log(keyword);
@@ -307,3 +308,7 @@ export async function getStaticProps({ locale }) {
     },
   };
 }
+
+Home.getLayout = function getLayout(page) {
+  return <MainLayout>{page}</MainLayout>;
+};
